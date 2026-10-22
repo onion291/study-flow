@@ -10,33 +10,109 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedWeeklyRouteImport } from './routes/_authenticated/weekly'
+import { Route as AuthenticatedTextbooksIndexRouteImport } from './routes/_authenticated/textbooks.index'
+import { Route as AuthenticatedTextbooksIdRouteImport } from './routes/_authenticated/textbooks.$id'
+import { Route as AuthenticatedTextbooksNewRouteImport } from './routes/_authenticated/textbooks.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedWeeklyRoute = AuthenticatedWeeklyRouteImport.update({
+  id: '/weekly',
+  path: '/weekly',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTextbooksIndexRoute =
+  AuthenticatedTextbooksIndexRouteImport.update({
+    id: '/textbooks/',
+    path: '/textbooks/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTextbooksIdRoute =
+  AuthenticatedTextbooksIdRouteImport.update({
+    id: '/textbooks/$id',
+    path: '/textbooks/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTextbooksNewRoute =
+  AuthenticatedTextbooksNewRouteImport.update({
+    id: '/textbooks/new',
+    path: '/textbooks/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/weekly': typeof AuthenticatedWeeklyRoute
+  '/textbooks/$id': typeof AuthenticatedTextbooksIdRoute
+  '/textbooks/new': typeof AuthenticatedTextbooksNewRoute
+  '/textbooks/': typeof AuthenticatedTextbooksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/weekly': typeof AuthenticatedWeeklyRoute
+  '/textbooks/$id': typeof AuthenticatedTextbooksIdRoute
+  '/textbooks/new': typeof AuthenticatedTextbooksNewRoute
+  '/textbooks': typeof AuthenticatedTextbooksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/weekly': typeof AuthenticatedWeeklyRoute
+  '/_authenticated/textbooks/$id': typeof AuthenticatedTextbooksIdRoute
+  '/_authenticated/textbooks/new': typeof AuthenticatedTextbooksNewRoute
+  '/_authenticated/textbooks/': typeof AuthenticatedTextbooksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/weekly'
+    | '/textbooks/$id'
+    | '/textbooks/new'
+    | '/textbooks/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/weekly'
+    | '/textbooks/$id'
+    | '/textbooks/new'
+    | '/textbooks'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/weekly'
+    | '/_authenticated/textbooks/$id'
+    | '/_authenticated/textbooks/new'
+    | '/_authenticated/textbooks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +124,72 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/weekly': {
+      id: '/_authenticated/weekly'
+      path: '/weekly'
+      fullPath: '/weekly'
+      preLoaderRoute: typeof AuthenticatedWeeklyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/textbooks/': {
+      id: '/_authenticated/textbooks/'
+      path: '/textbooks'
+      fullPath: '/textbooks/'
+      preLoaderRoute: typeof AuthenticatedTextbooksIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/textbooks/$id': {
+      id: '/_authenticated/textbooks/$id'
+      path: '/textbooks/$id'
+      fullPath: '/textbooks/$id'
+      preLoaderRoute: typeof AuthenticatedTextbooksIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/textbooks/new': {
+      id: '/_authenticated/textbooks/new'
+      path: '/textbooks/new'
+      fullPath: '/textbooks/new'
+      preLoaderRoute: typeof AuthenticatedTextbooksNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedWeeklyRoute: typeof AuthenticatedWeeklyRoute
+  AuthenticatedTextbooksIdRoute: typeof AuthenticatedTextbooksIdRoute
+  AuthenticatedTextbooksNewRoute: typeof AuthenticatedTextbooksNewRoute
+  AuthenticatedTextbooksIndexRoute: typeof AuthenticatedTextbooksIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedWeeklyRoute: AuthenticatedWeeklyRoute,
+  AuthenticatedTextbooksIdRoute: AuthenticatedTextbooksIdRoute,
+  AuthenticatedTextbooksNewRoute: AuthenticatedTextbooksNewRoute,
+  AuthenticatedTextbooksIndexRoute: AuthenticatedTextbooksIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
