@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedWeeklyRouteImport } from './routes/_authenticated/weekly'
+import { Route as AuthenticatedTextbooksIndexRouteImport } from './routes/_authenticated/textbooks.index'
+import { Route as AuthenticatedTextbooksIdRouteImport } from './routes/_authenticated/textbooks.$id'
 import { Route as AuthenticatedTextbooksNewRouteImport } from './routes/_authenticated/textbooks.new'
 
 const IndexRoute = IndexRouteImport.update({
@@ -34,6 +36,18 @@ const AuthenticatedWeeklyRoute = AuthenticatedWeeklyRouteImport.update({
   path: '/weekly',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTextbooksIndexRoute =
+  AuthenticatedTextbooksIndexRouteImport.update({
+    id: '/textbooks/',
+    path: '/textbooks/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTextbooksIdRoute =
+  AuthenticatedTextbooksIdRouteImport.update({
+    id: '/textbooks/$id',
+    path: '/textbooks/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTextbooksNewRoute =
   AuthenticatedTextbooksNewRouteImport.update({
     id: '/textbooks/new',
@@ -45,13 +59,17 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/weekly': typeof AuthenticatedWeeklyRoute
+  '/textbooks/$id': typeof AuthenticatedTextbooksIdRoute
   '/textbooks/new': typeof AuthenticatedTextbooksNewRoute
+  '/textbooks/': typeof AuthenticatedTextbooksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/weekly': typeof AuthenticatedWeeklyRoute
+  '/textbooks/$id': typeof AuthenticatedTextbooksIdRoute
   '/textbooks/new': typeof AuthenticatedTextbooksNewRoute
+  '/textbooks': typeof AuthenticatedTextbooksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,20 +77,36 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/weekly': typeof AuthenticatedWeeklyRoute
+  '/_authenticated/textbooks/$id': typeof AuthenticatedTextbooksIdRoute
   '/_authenticated/textbooks/new': typeof AuthenticatedTextbooksNewRoute
+  '/_authenticated/textbooks/': typeof AuthenticatedTextbooksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/weekly' | '/textbooks/new'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/weekly'
+    | '/textbooks/$id'
+    | '/textbooks/new'
+    | '/textbooks/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/weekly' | '/textbooks/new'
+  to:
+    | '/'
+    | '/auth'
+    | '/weekly'
+    | '/textbooks/$id'
+    | '/textbooks/new'
+    | '/textbooks'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/weekly'
+    | '/_authenticated/textbooks/$id'
     | '/_authenticated/textbooks/new'
+    | '/_authenticated/textbooks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -111,6 +145,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWeeklyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/textbooks/': {
+      id: '/_authenticated/textbooks/'
+      path: '/textbooks'
+      fullPath: '/textbooks/'
+      preLoaderRoute: typeof AuthenticatedTextbooksIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/textbooks/$id': {
+      id: '/_authenticated/textbooks/$id'
+      path: '/textbooks/$id'
+      fullPath: '/textbooks/$id'
+      preLoaderRoute: typeof AuthenticatedTextbooksIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/textbooks/new': {
       id: '/_authenticated/textbooks/new'
       path: '/textbooks/new'
@@ -123,12 +171,16 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedWeeklyRoute: typeof AuthenticatedWeeklyRoute
+  AuthenticatedTextbooksIdRoute: typeof AuthenticatedTextbooksIdRoute
   AuthenticatedTextbooksNewRoute: typeof AuthenticatedTextbooksNewRoute
+  AuthenticatedTextbooksIndexRoute: typeof AuthenticatedTextbooksIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedWeeklyRoute: AuthenticatedWeeklyRoute,
+  AuthenticatedTextbooksIdRoute: AuthenticatedTextbooksIdRoute,
   AuthenticatedTextbooksNewRoute: AuthenticatedTextbooksNewRoute,
+  AuthenticatedTextbooksIndexRoute: AuthenticatedTextbooksIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
