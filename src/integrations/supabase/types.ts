@@ -14,7 +14,154 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      plan_items: {
+        Row: {
+          completed_amount: number
+          created_at: string
+          date: string
+          id: string
+          textbook_id: string
+          unit_end: number
+          unit_start: number
+          user_id: string
+        }
+        Insert: {
+          completed_amount?: number
+          created_at?: string
+          date: string
+          id?: string
+          textbook_id: string
+          unit_end: number
+          unit_start: number
+          user_id?: string
+        }
+        Update: {
+          completed_amount?: number
+          created_at?: string
+          date?: string
+          id?: string
+          textbook_id?: string
+          unit_end?: number
+          unit_start?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_items_textbook_id_fkey"
+            columns: ["textbook_id"]
+            isOneToOne: false
+            referencedRelation: "textbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subjects: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      textbooks: {
+        Row: {
+          created_at: string
+          day_ranges: Json
+          end_date: string
+          end_unit: number
+          id: string
+          initial_completed: number
+          max_per_day: number | null
+          memo: string | null
+          name: string
+          start_date: string
+          start_unit: number
+          status: string
+          subject_id: string | null
+          unit_type: string
+          units_per_day: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day_ranges?: Json
+          end_date: string
+          end_unit: number
+          id?: string
+          initial_completed?: number
+          max_per_day?: number | null
+          memo?: string | null
+          name: string
+          start_date: string
+          start_unit?: number
+          status?: string
+          subject_id?: string | null
+          unit_type: string
+          units_per_day?: number
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          day_ranges?: Json
+          end_date?: string
+          end_unit?: number
+          id?: string
+          initial_completed?: number
+          max_per_day?: number | null
+          memo?: string | null
+          name?: string
+          start_date?: string
+          start_unit?: number
+          status?: string
+          subject_id?: string | null
+          unit_type?: string
+          units_per_day?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "textbooks_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weekday_settings: {
+        Row: {
+          is_rest: boolean
+          subject_ids: string[]
+          user_id: string
+          weekday: number
+        }
+        Insert: {
+          is_rest?: boolean
+          subject_ids?: string[]
+          user_id?: string
+          weekday: number
+        }
+        Update: {
+          is_rest?: boolean
+          subject_ids?: string[]
+          user_id?: string
+          weekday?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
