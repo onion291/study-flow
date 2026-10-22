@@ -90,3 +90,28 @@ export function useSetCompleted() {
     onSettled: () => qc.invalidateQueries({ queryKey: keys.items }),
   });
 }
+
+/** Persist a (re)computed plan: delete unworked items, renumber kept ones, insert new slots. */
+export async function persistPlan(
+  textbookId: string,
+  keep: { id: string; unit_start: number; unit_end: number }[],
+  remove: string[],
+  slots: { date: string; unit_start: number; unit_end: number }[],
+) {
+  if (remove.length) check(await supabase.from("plan_items").delete().in("id", remove).select("id"));
+  for (const k of keep)
+    check(
+      await supabase
+        .from("plan_items")
+        .update({ unit_start: k.unit_start, unit_end: k.unit_end })
+        .eq("id", k.id)
+        .select("id"),
+    );
+  if (slots.length)
+    check(
+      await supabase
+        .from("plan_items")
+        .insert(slots.map((s) => ({ ...s, textbook_id: textbookId })))
+        .select("id"),
+    );
+}
