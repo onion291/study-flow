@@ -1,4 +1,4 @@
-import { generatePlan, studyDates, type PlanResult, type UnitType, type WeekdaySetting } from "./planner";
+import { addDays, generatePlan, studyDates, type PlanResult, type UnitType, type WeekdaySetting } from "./planner";
 
 export interface TextbookLike {
   id: string;
@@ -66,4 +66,19 @@ export function computeReplan(
     maxPerDay: t.max_per_day,
   });
   return { keep, remove, remaining, result };
+}
+
+/** Earliest end date (within ~2 years) at which the remaining amount fits, or null. */
+export function suggestEndDate(
+  t: TextbookLike,
+  items: ItemLike[],
+  settings: WeekdaySetting[],
+  fromDate: string,
+): string | null {
+  let end = t.end_date;
+  for (let i = 0; i < 730; i++) {
+    end = addDays(end, 1);
+    if (computeReplan({ ...t, end_date: end }, items, settings, fromDate).result.ok) return end;
+  }
+  return null;
 }
