@@ -18,9 +18,9 @@ export function PlanItemRow({
 }: {
   item: PlanItem;
   textbook: Textbook;
-  subject?: string;
-  showDate?: boolean;
-  onEdit?: () => void;
+  subject?: string | undefined;
+  showDate?: boolean | undefined;
+  onEdit?: (() => void) | undefined;
 }) {
   const setCompleted = useSetCompleted();
   const amount = slotAmount(item);

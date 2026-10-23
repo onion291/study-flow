@@ -12,7 +12,7 @@ describe("planner", () => {
   it("only uses Mon/Wed/Fri study days for 2026.10.23~2026.11.21", () => {
     const dates = studyDates("2026-10-23", "2026-11-21", MATH, mwf);
     expect(dates.every((d) => [1, 3, 5].includes(weekdayOf(d)))).toBe(true);
-    expect(dates[0]).toBe("2026-10-23");
+    expect(dates[0]!).toBe("2026-10-23");
     expect(dates.length).toBe(13);
   });
 
@@ -21,7 +21,7 @@ describe("planner", () => {
     const r = generatePlan({ nextUnit: 1, remaining: 240, dates, unitType: "page" });
     if (!r.ok) throw new Error();
     expect(r.items.reduce((s, i) => s + slotAmount(i), 0)).toBe(240);
-    expect(r.items[0].unit_start).toBe(1);
+    expect(r.items[0]!.unit_start).toBe(1);
     expect(r.items.at(-1)!.unit_end).toBe(240);
     const amts = r.items.map(slotAmount);
     expect(Math.max(...amts) - Math.min(...amts)).toBeLessThanOrEqual(1);

@@ -32,8 +32,8 @@ describe("redistribution", () => {
     expect(r.keep.map((k) => [k.unit_start, k.unit_end])).toEqual([[1, 5], [6, 7]]);
     expect(r.remaining).toBe(33);
     if (!r.result.ok) throw new Error();
-    expect(r.result.items[0].unit_start).toBe(8);
+    expect(r.result.items[0]!.unit_start).toBe(8);
     expect(r.result.items.at(-1)!.unit_end).toBe(40);
-    expect(r.result.items[0].date).toBe("2026-10-23");
+    expect(r.result.items[0]!.date).toBe("2026-10-23");
   });
 });

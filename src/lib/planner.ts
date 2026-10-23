@@ -32,7 +32,7 @@ export function todayKST(now: Date = new Date()): string {
 }
 
 function toUTC(d: string): number {
-  const [y, m, day] = d.split("-").map(Number);
+  const [y = 0, m = 1, day = 1] = d.split("-").map(Number);
   return Date.UTC(y, m - 1, day);
 }
 
@@ -111,7 +111,7 @@ export function generatePlan(opts: {
     let left = remaining;
     for (let i = 0; i < needed; i++) {
       const amt = Math.min(per, left);
-      items.push({ date: dates[i], unit_start: cursor, unit_end: cursor + amt - 1 });
+      items.push({ date: dates[i]!, unit_start: cursor, unit_end: cursor + amt - 1 });
       cursor += amt;
       left -= amt;
     }
@@ -133,7 +133,7 @@ export function generatePlan(opts: {
   for (let i = 0; i < n; i++) {
     const amt = base + (i < extra ? 1 : 0);
     if (amt <= 0) continue;
-    items.push({ date: dates[i], unit_start: cursor, unit_end: cursor + amt - 1 });
+    items.push({ date: dates[i]!, unit_start: cursor, unit_end: cursor + amt - 1 });
     cursor += amt;
   }
   return { ok: true, items, availableDays: n };

@@ -46,13 +46,13 @@ function TextbookDetail() {
 
   async function togglePause() {
     const { error } = await supabase.from("textbooks").update({ status: t!.status === "paused" ? "active" : "paused" }).eq("id", t!.id);
-    if (error) return toast.error("변경하지 못했습니다.");
+    if (error) { toast.error("변경하지 못했습니다."); return; }
     qc.invalidateQueries();
   }
 
   async function remove() {
     const { error } = await supabase.from("textbooks").delete().eq("id", t!.id);
-    if (error) return toast.error("삭제하지 못했습니다.");
+    if (error) { toast.error("삭제하지 못했습니다."); return; }
     await qc.invalidateQueries();
     toast.success("교재를 삭제했어요.");
     navigate({ to: "/textbooks" });
@@ -60,7 +60,7 @@ function TextbookDetail() {
 
   async function saveEdit(v: TextbookValues) {
     const { error } = await supabase.from("textbooks").update({ ...v, memo: v.memo || null }).eq("id", t!.id);
-    if (error) return toast.error("저장하지 못했습니다.");
+    if (error) { toast.error("저장하지 못했습니다."); return; }
     await qc.invalidateQueries();
     setEditOpen(false);
     toast.success("교재 정보를 저장했어요. 분량이나 기간을 바꿨다면 '남은 분량 재분배'로 일정을 다시 만드세요.");
