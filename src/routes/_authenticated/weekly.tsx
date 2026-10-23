@@ -29,9 +29,9 @@ function WeeklyPage() {
     e.preventDefault();
     const name = newName.trim();
     if (!name) return;
-    if (subjects.some((s) => s.name === name)) return toast.error("이미 있는 과목입니다.");
+    if (subjects.some((s) => s.name === name)) { toast.error("이미 있는 과목입니다."); return; }
     const { error } = await supabase.from("subjects").insert({ name });
-    if (error) return toast.error("과목을 추가하지 못했습니다.");
+    if (error) { toast.error("과목을 추가하지 못했습니다."); return; }
     setNewName("");
     qc.invalidateQueries({ queryKey: keys.subjects });
   }
@@ -39,7 +39,7 @@ function WeeklyPage() {
   async function renameSubject() {
     if (!editing || !editing.name.trim()) return;
     const { error } = await supabase.from("subjects").update({ name: editing.name.trim() }).eq("id", editing.id);
-    if (error) return toast.error("수정하지 못했습니다.");
+    if (error) { toast.error("수정하지 못했습니다."); return; }
     setEditing(null);
     qc.invalidateQueries({ queryKey: keys.subjects });
   }
@@ -47,7 +47,7 @@ function WeeklyPage() {
   async function deleteSubject(id: string, name: string) {
     if (!confirm(`'${name}' 과목을 삭제할까요? 이 과목의 교재는 과목 없음으로 바뀌고 새 계획에 배분되지 않습니다.`)) return;
     const { error } = await supabase.from("subjects").delete().eq("id", id);
-    if (error) return toast.error("삭제하지 못했습니다.");
+    if (error) { toast.error("삭제하지 못했습니다."); return; }
     await Promise.all(
       weekdays
         .filter((w) => w.subject_ids.includes(id))

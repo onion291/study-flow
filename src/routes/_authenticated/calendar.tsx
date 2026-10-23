@@ -35,7 +35,7 @@ function CalendarPage() {
   const gridStart = addDays(first, -weekdayOf(first));
   const days = Array.from({ length: 42 }, (_, i) => addDays(gridStart, i));
   const shift = (n: number) => {
-    const [y, m] = month.split("-").map(Number);
+    const [y = 0, m = 1] = month.split("-").map(Number);
     const d = new Date(Date.UTC(y, m - 1 + n, 1));
     setMonth(d.toISOString().slice(0, 7));
   };
@@ -108,10 +108,10 @@ function EditItemDialog({ item, onClose }: { item: PlanItem; onClose: () => void
 
   async function save() {
     const s = Number(start), e = Number(end);
-    if (!date || !Number.isInteger(s) || !Number.isInteger(e) || e < s) return toast.error("날짜와 범위를 확인해 주세요.");
+    if (!date || !Number.isInteger(s) || !Number.isInteger(e) || e < s) { toast.error("날짜와 범위를 확인해 주세요."); return; }
     const completed = Math.min(item.completed_amount, e - s + 1);
     const { error } = await supabase.from("plan_items").update({ date, unit_start: s, unit_end: e, completed_amount: completed }).eq("id", item.id);
-    if (error) return toast.error("저장하지 못했습니다.");
+    if (error) { toast.error("저장하지 못했습니다."); return; }
     qc.invalidateQueries({ queryKey: keys.items });
     toast.success("일정을 수정했어요.");
     onClose();
@@ -119,7 +119,7 @@ function EditItemDialog({ item, onClose }: { item: PlanItem; onClose: () => void
 
   async function remove() {
     const { error } = await supabase.from("plan_items").delete().eq("id", item.id);
-    if (error) return toast.error("삭제하지 못했습니다.");
+    if (error) { toast.error("삭제하지 못했습니다."); return; }
     qc.invalidateQueries({ queryKey: keys.items });
     onClose();
   }
